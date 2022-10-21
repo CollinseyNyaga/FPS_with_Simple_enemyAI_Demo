@@ -1,0 +1,788 @@
+[gd_scene load_steps=42 format=3 uid="uid://gylt8snrovym"]
+
+[ext_resource type="Script" path="res://SCRIPTS/player/Player.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://dmcmrmtct46qs" path="res://IMPORTS/textures/test_floor_texture.jpg" id="1_hk0qy"]
+[ext_resource type="Script" path="res://SCRIPTS/ground/Ground.cs" id="1_xy1ja"]
+[ext_resource type="Script" path="res://SCRIPTS/player/input.cs" id="2"]
+[ext_resource type="Texture2D" uid="uid://bnr6j0wifbjjt" path="res://IMPORTS/textures/crosshair.png" id="3"]
+[ext_resource type="Script" path="res://SCRIPTS/player/Weapon/AutomaticWeapon.cs" id="4"]
+[ext_resource type="Script" path="res://SCRIPTS/player/Weapon/WeaponParent.cs" id="5"]
+[ext_resource type="PackedScene" uid="uid://bdoaigfflratk" path="res://RESOURCES/scenes/player/PlayerSmg.tscn" id="6_eba8t"]
+[ext_resource type="Texture2D" uid="uid://csjrtjov3e1nw" path="res://IMPORTS/textures/muzzle_flash.png" id="7_1a7cd"]
+[ext_resource type="Script" path="res://SCRIPTS/player/Weapon/MuzzleFlash.cs" id="8"]
+[ext_resource type="PackedScene" uid="uid://duefih0nx6v4q" path="res://IMPORTS/models/playerArm/playerArm.gltf" id="9_yu1jc"]
+[ext_resource type="PackedScene" uid="uid://cfdxdqy8cy1so" path="res://RESOURCES/scenes/enemy.tscn" id="10_6s74h"]
+[ext_resource type="Script" path="res://SCRIPTS/player/animationsManager.cs" id="10_41ug7"]
+[ext_resource type="Animation" uid="uid://d3ckkh73sh5df" path="res://RESOURCES/animations/player/fps_character/hold.res" id="10_p3ypn"]
+[ext_resource type="Animation" uid="uid://bfgg5s7plxwo0" path="res://RESOURCES/animations/player/fps_character/throw.res" id="11_g1yit"]
+[ext_resource type="Script" path="res://SCRIPTS/player/Throwable.cs" id="12_tx68m"]
+[ext_resource type="FontFile" uid="uid://dgshgl1sxhoyo" path="res://IMPORTS/fonts/hvd_comic_serif/HVD_Comic_Serif_Pro.otf" id="16_8qvbl"]
+[ext_resource type="Script" path="res://SCRIPTS/GUI/HUD/FpsCounter.cs" id="16_m5lln"]
+[ext_resource type="Script" path="res://SCRIPTS/GUI/HUD/Health.cs" id="18_8fo1t"]
+[ext_resource type="Texture2D" uid="uid://eualeiuefo8s" path="res://IMPORTS/textures/grenade_icon.png" id="18_ddfnh"]
+[ext_resource type="Script" path="res://SCRIPTS/GUI/pause_menu/PauseMenu.cs" id="18_rsai3"]
+[ext_resource type="Script" path="res://SCRIPTS/GUI/pause_menu/PauseMenuButton.cs" id="19_mmyy2"]
+[ext_resource type="Texture2D" uid="uid://dogsatpwbxdxf" path="res://IMPORTS/textures/bullet_icon.png" id="19_smi3e"]
+
+[sub_resource type="PlaneMesh" id="3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qgc3m"]
+albedo_texture = ExtResource("1_hk0qy")
+uv1_scale = Vector3(50, 50, 50)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cp01o"]
+size = Vector3(2.01228, 0.274536, 2.014)
+
+[sub_resource type="BoxShape3D" id="2"]
+size = Vector3(1, 4, 1)
+
+[sub_resource type="PlaneMesh" id="13"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ceqre"]
+transparency = 1
+cull_mode = 2
+albedo_texture = ExtResource("7_1a7cd")
+
+[sub_resource type="Animation" id="12"]
+resource_name = "flash"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.15),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_x6tdx"]
+resource_name = "reset"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ixqjf"]
+_data = {
+"flash": SubResource("12"),
+"reset": SubResource("Animation_x6tdx")
+}
+
+[sub_resource type="Animation" id="Animation_nd7k8"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.993092, 0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -0.5, 0.2)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fu6v1"]
+_data = {
+"RESET": SubResource("Animation_nd7k8"),
+"hold": ExtResource("10_p3ypn"),
+"throw": ExtResource("11_g1yit")
+}
+
+[sub_resource type="BoxMesh" id="BoxMesh_lixoh"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="Animation" id="Animation_10uyh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("cam/Weapon:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("cam/Weapon:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("cam/Camera3D:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_oqoh0"]
+resource_name = "running"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("cam/Weapon:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -0.05, 0), Vector3(0, 0, 0), Vector3(0, -0.089, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("cam/Weapon:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-0.0872665, 0, 0), Vector3(0, 0, 0), Vector3(-0.0872665, 0, 0), Vector3(0, 0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("cam/Camera3D:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, 0.0174533), Vector3(0, 0, 0), Vector3(0, 0, -0.0174533), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gocp3"]
+_data = {
+"RESET": SubResource("Animation_10uyh"),
+"running": SubResource("Animation_oqoh0")
+}
+
+[sub_resource type="LabelSettings" id="LabelSettings_acb3n"]
+font = ExtResource("16_8qvbl")
+font_size = 12
+font_color = Color(0.152941, 0.470588, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_xblvc"]
+font = ExtResource("16_8qvbl")
+font_size = 12
+font_color = Color(0.152941, 0.470588, 0, 1)
+
+[sub_resource type="Environment" id="Environment_iqlil"]
+background_mode = 1
+background_color = Color(0.756863, 0.67451, 0.447059, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.847059, 0.792157, 0.423529, 1)
+ambient_light_energy = 2.27
+ssil_radius = 11.85
+ssil_intensity = 5.41
+ssil_sharpness = 0.46
+ssil_normal_rejection = 0.68
+glow_enabled = true
+glow_intensity = 1.89
+glow_strength = 0.73
+glow_bloom = 0.59
+volumetric_fog_density = 0.1257
+volumetric_fog_albedo = Color(0.854902, 0.729412, 0.192157, 1)
+volumetric_fog_emission = Color(0.478431, 0.478431, 0.478431, 1)
+volumetric_fog_emission_energy = 4.8
+adjustment_brightness = 1.27
+adjustment_contrast = 1.22
+
+[node name="level" type="Node3D"]
+process_mode = 1
+
+[node name="ground" type="Node3D" parent="."]
+
+[node name="ground" type="StaticBody3D" parent="ground"]
+script = ExtResource("1_xy1ja")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="ground/ground"]
+transform = Transform3D(500, 0, 0, 0, 1, 0, 0, 0, 500, 0, 0, 0)
+mesh = SubResource("3")
+surface_material_override/0 = SubResource("StandardMaterial3D_qgc3m")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ground/ground"]
+transform = Transform3D(500, 0, 0, 0, 1, 0, 0, 0, 500, 0, 0, 0)
+shape = SubResource("BoxShape3D_cp01o")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.30538, 0)
+script = ExtResource("1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("2")
+
+[node name="input" type="Node" parent="Player"]
+script = ExtResource("2")
+
+[node name="cam" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Player/cam"]
+far = 500.0
+
+[node name="Weapon" type="Node3D" parent="Player/cam"]
+script = ExtResource("5")
+
+[node name="smg1" type="Node3D" parent="Player/cam/Weapon"]
+transform = Transform3D(0.996041, 0, 0.0888943, 0, 1, 0, -0.0888943, 0, 0.996041, 0.263, -0.288, -1.043)
+script = ExtResource("4")
+
+[node name="AutoWeaponTimer" type="Timer" parent="Player/cam/Weapon/smg1"]
+
+[node name="mesh" type="Node3D" parent="Player/cam/Weapon/smg1"]
+transform = Transform3D(0.4, 0, 0, 0, 0.399593, 0.0180406, 0, -0.0180406, 0.399593, 0.064, -0.072, 0.253)
+
+[node name="PlayerSmg" parent="Player/cam/Weapon/smg1/mesh" instance=ExtResource("6_eba8t")]
+
+[node name="muzzle_flash" type="Node3D" parent="Player/cam/Weapon/smg1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.526674)
+script = ExtResource("8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player/cam/Weapon/smg1/muzzle_flash"]
+transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, -0.5, 0, 0.5, -2.18557e-08, 0, 0, 0)
+mesh = SubResource("13")
+surface_material_override/0 = SubResource("StandardMaterial3D_ceqre")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/cam/Weapon/smg1/muzzle_flash"]
+autoplay = "reset"
+playback_speed = 2.0
+libraries = {
+"": SubResource("AnimationLibrary_ixqjf")
+}
+
+[node name="bulletRayCast" type="RayCast3D" parent="Player/cam/Weapon/smg1"]
+transform = Transform3D(0.995894, 0, -0.0905283, 0, 1, 0, 0.0905283, 0, 0.995894, 0.0637608, 0, 0)
+target_position = Vector3(0, 0, -500)
+
+[node name="Arm" type="Node3D" parent="Player/cam"]
+transform = Transform3D(1, 0, 0, 0, 0.546102, -0.837719, 0, 0.837719, 0.546102, 0, -0.5, 0.2)
+visible = false
+
+[node name="playerArm" parent="Player/cam/Arm" instance=ExtResource("9_yu1jc")]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, -0.597, -0.5, -1.2)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/cam/Arm"]
+playback_speed = 2.5
+libraries = {
+"": SubResource("AnimationLibrary_fu6v1")
+}
+
+[node name="throwable" type="Node3D" parent="Player/cam"]
+script = ExtResource("12_tx68m")
+
+[node name="spawnpoint" type="Node3D" parent="Player/cam/throwable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.12594)
+
+[node name="MeshInstance3d" type="MeshInstance3D" parent="Player/cam/throwable/spawnpoint"]
+visible = false
+mesh = SubResource("BoxMesh_lixoh")
+skeleton = NodePath("")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player"]
+playback_speed = 1.2
+libraries = {
+"": SubResource("AnimationLibrary_gocp3")
+}
+
+[node name="animationsManager" type="Node" parent="Player"]
+script = ExtResource("10_41ug7")
+
+[node name="GUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="crosshair" type="TextureRect" parent="GUI"]
+modulate = Color(1, 1, 1, 0.388235)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7, 0.7)
+pivot_offset = Vector2(16, 16)
+texture = ExtResource("3")
+
+[node name="FPS" type="Control" parent="GUI"]
+layout_mode = 1
+anchors_preset = 0
+offset_right = 100.0
+offset_bottom = 29.0
+mouse_filter = 1
+script = ExtResource("16_m5lln")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GUI/FPS"]
+layout_mode = 0
+offset_right = 81.0
+offset_bottom = 26.0
+
+[node name="Label" type="Label" parent="GUI/FPS/HBoxContainer"]
+layout_mode = 2
+offset_top = 2.0
+offset_right = 37.0
+offset_bottom = 23.0
+text = "FPS   "
+label_settings = SubResource("LabelSettings_acb3n")
+
+[node name="value" type="Label" parent="GUI/FPS/HBoxContainer"]
+layout_mode = 2
+offset_left = 41.0
+offset_top = 2.0
+offset_right = 61.0
+offset_bottom = 23.0
+text = "120"
+label_settings = SubResource("LabelSettings_xblvc")
+
+[node name="Timer" type="Timer" parent="GUI/FPS"]
+
+[node name="HUD" type="Control" parent="GUI"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 299.0
+grow_horizontal = 2
+mouse_filter = 1
+
+[node name="health" type="Control" parent="GUI/HUD"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -90.0
+offset_top = 64.0
+offset_right = 90.0
+offset_bottom = 85.0
+grow_horizontal = 2
+script = ExtResource("18_8fo1t")
+
+[node name="outer_bar" type="ColorRect" parent="GUI/HUD/health"]
+layout_mode = 0
+offset_right = 179.0
+offset_bottom = 10.0
+
+[node name="inner_bar" type="ColorRect" parent="GUI/HUD/health/outer_bar"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -86.5
+offset_top = -2.0
+offset_right = 86.5
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.666667, 0.266667, 0, 1)
+
+[node name="grenades" type="Control" parent="GUI/HUD"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -74.5
+offset_top = 88.0
+offset_right = 74.5
+offset_bottom = 137.0
+grow_horizontal = 2
+
+[node name="g1" type="TextureRect" parent="GUI/HUD/grenades"]
+layout_mode = 0
+offset_right = 64.0
+offset_bottom = 87.0
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("18_ddfnh")
+
+[node name="g2" type="TextureRect" parent="GUI/HUD/grenades"]
+layout_mode = 0
+offset_left = 32.0
+offset_right = 96.0
+offset_bottom = 87.0
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("18_ddfnh")
+
+[node name="g3" type="TextureRect" parent="GUI/HUD/grenades"]
+layout_mode = 0
+offset_left = 64.0
+offset_right = 128.0
+offset_bottom = 87.0
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("18_ddfnh")
+
+[node name="g4" type="TextureRect" parent="GUI/HUD/grenades"]
+layout_mode = 0
+offset_left = 96.0
+offset_right = 160.0
+offset_bottom = 87.0
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("18_ddfnh")
+
+[node name="g5" type="TextureRect" parent="GUI/HUD/grenades"]
+layout_mode = 0
+offset_left = 128.0
+offset_right = 192.0
+offset_bottom = 87.0
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("18_ddfnh")
+
+[node name="waves" type="Control" parent="GUI/HUD"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 499.0
+offset_top = 56.0
+offset_right = 534.0
+offset_bottom = 183.0
+grow_horizontal = 2
+
+[node name="ColorRect" type="ColorRect" parent="GUI/HUD/waves"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="w1" type="TextureRect" parent="GUI/HUD/waves"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -11.5
+offset_top = 11.0
+offset_right = 58.5
+offset_bottom = 44.0
+grow_horizontal = 2
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("19_smi3e")
+
+[node name="w2" type="TextureRect" parent="GUI/HUD/waves"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -11.5
+offset_top = 35.0
+offset_right = 58.5
+offset_bottom = 68.0
+grow_horizontal = 2
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("19_smi3e")
+
+[node name="w3" type="TextureRect" parent="GUI/HUD/waves"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -11.5
+offset_top = 59.0
+offset_right = 58.5
+offset_bottom = 92.0
+grow_horizontal = 2
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("19_smi3e")
+
+[node name="w4" type="TextureRect" parent="GUI/HUD/waves"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -11.5
+offset_top = 83.0
+offset_right = 58.5
+offset_bottom = 116.0
+grow_horizontal = 2
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("19_smi3e")
+
+[node name="w5" type="TextureRect" parent="GUI/HUD/waves"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -11.5
+offset_top = 107.0
+offset_right = 58.5
+offset_bottom = 140.0
+grow_horizontal = 2
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("19_smi3e")
+
+[node name="pause_menu" type="Control" parent="GUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -558.5
+offset_top = -305.0
+offset_right = 558.5
+offset_bottom = 305.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("18_rsai3")
+
+[node name="background" type="ColorRect" parent="GUI/pause_menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0.666667, 0.266667, 0, 1)
+
+[node name="buttons" type="Control" parent="GUI/pause_menu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -86.5
+offset_top = -90.5
+offset_right = 86.5
+offset_bottom = 90.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Resume" type="Control" parent="GUI/pause_menu/buttons"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -131.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("19_mmyy2")
+
+[node name="ColorRect" type="ColorRect" parent="GUI/pause_menu/buttons/Resume"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="GUI/pause_menu/buttons/Resume"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_colors/font_color = Color(0.666667, 0.266667, 0, 1)
+theme_override_fonts/font = ExtResource("16_8qvbl")
+theme_override_font_sizes/font_size = 25
+text = "Resume"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Settings" type="Control" parent="GUI/pause_menu/buttons"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 64.0
+offset_bottom = -67.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("19_mmyy2")
+
+[node name="ColorRect" type="ColorRect" parent="GUI/pause_menu/buttons/Settings"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="GUI/pause_menu/buttons/Settings"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_colors/font_color = Color(0.666667, 0.266667, 0, 1)
+theme_override_fonts/font = ExtResource("16_8qvbl")
+theme_override_font_sizes/font_size = 25
+text = "Settings"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Quit" type="Control" parent="GUI/pause_menu/buttons"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 128.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("19_mmyy2")
+
+[node name="ColorRect" type="ColorRect" parent="GUI/pause_menu/buttons/Quit"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="GUI/pause_menu/buttons/Quit"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_colors/font_color = Color(0.666667, 0.266667, 0, 1)
+theme_override_fonts/font = ExtResource("16_8qvbl")
+theme_override_font_sizes/font_size = 25
+text = "Quit
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BULLETS" type="Node3D" parent="."]
+
+[node name="DAMAGEEFFECTS" type="Node3D" parent="."]
+
+[node name="ENEMIES" type="Node3D" parent="."]
+
+[node name="enemy" parent="ENEMIES" instance=ExtResource("10_6s74h")]
+transform = Transform3D(-0.928797, 0, -0.37059, 0, 1, 0, 0.37059, 0, -0.928797, 8.51535, 5.09734, -59.699)
+
+[node name="enemy2" parent="ENEMIES" instance=ExtResource("10_6s74h")]
+transform = Transform3D(-0.928797, 0, -0.37059, 0, 1, 0, 0.37059, 0, -0.928797, -128.251, 5.09734, -49.4823)
+
+[node name="enemy3" parent="ENEMIES" instance=ExtResource("10_6s74h")]
+transform = Transform3D(-0.928797, 0, -0.37059, 0, 1, 0, 0.37059, 0, -0.928797, -133.758, 5.09734, -117.235)
+
+[node name="enemy4" parent="ENEMIES" instance=ExtResource("10_6s74h")]
+transform = Transform3D(-0.928797, 0, -0.37059, 0, 1, 0, 0.37059, 0, -0.928797, -122.3, 5.09734, -159.407)
+
+[node name="enemy5" parent="ENEMIES" instance=ExtResource("10_6s74h")]
+transform = Transform3D(-0.928797, 0, -0.37059, 0, 1, 0, 0.37059, 0, -0.928797, -78.4764, 5.09734, -167.785)
+
+[node name="enemy6" parent="ENEMIES" instance=ExtResource("10_6s74h")]
+transform = Transform3D(0.964082, 0, 0.265607, 0, 1, 0, -0.265607, 0, 0.964082, -46.7942, 28.1522, -306.537)
+
+[node name="enemy7" parent="ENEMIES" instance=ExtResource("10_6s74h")]
+transform = Transform3D(0.964082, 0, 0.265607, 0, 1, 0, -0.265607, 0, 0.964082, 90.2631, 28.1522, -301.567)
+
+[node name="enemy8" parent="ENEMIES" instance=ExtResource("10_6s74h")]
+transform = Transform3D(0.964082, 0, 0.265607, 0, 1, 0, -0.265607, 0, 0.964082, 88.244, 28.1522, -233.621)
+
+[node name="enemy9" parent="ENEMIES" instance=ExtResource("10_6s74h")]
+transform = Transform3D(0.964082, 0, 0.265607, 0, 1, 0, -0.265607, 0, 0.964082, 72.1927, 28.1522, -192.975)
+
+[node name="enemy10" parent="ENEMIES" instance=ExtResource("10_6s74h")]
+transform = Transform3D(0.964082, 0, 0.265607, 0, 1, 0, -0.265607, 0, 0.964082, 27.7114, 28.1522, -189.494)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_iqlil")
+
+[node name="THROWABLES" type="Node3D" parent="."]
+
+[connection signal="timeout" from="Player/cam/Weapon/smg1/AutoWeaponTimer" to="Player/cam/Weapon/smg1" method="AutoWeaponTimerTimedOut"]
+[connection signal="timeout" from="GUI/FPS/Timer" to="GUI/FPS" method="FpsTimerTimedOut"]
+[connection signal="gui_input" from="GUI/pause_menu/buttons/Resume" to="GUI/pause_menu/buttons/Resume" method="GuiInput"]
+[connection signal="mouse_entered" from="GUI/pause_menu/buttons/Resume" to="GUI/pause_menu/buttons/Resume" method="ButtonHovered"]
+[connection signal="mouse_exited" from="GUI/pause_menu/buttons/Resume" to="GUI/pause_menu/buttons/Resume" method="MouseExited"]
+[connection signal="gui_input" from="GUI/pause_menu/buttons/Settings" to="GUI/pause_menu/buttons/Settings" method="GuiInput"]
+[connection signal="mouse_entered" from="GUI/pause_menu/buttons/Settings" to="GUI/pause_menu/buttons/Settings" method="ButtonHovered"]
+[connection signal="mouse_exited" from="GUI/pause_menu/buttons/Settings" to="GUI/pause_menu/buttons/Settings" method="MouseExited"]
+[connection signal="gui_input" from="GUI/pause_menu/buttons/Quit" to="GUI/pause_menu/buttons/Quit" method="GuiInput"]
+[connection signal="mouse_entered" from="GUI/pause_menu/buttons/Quit" to="GUI/pause_menu/buttons/Quit" method="ButtonHovered"]
+[connection signal="mouse_exited" from="GUI/pause_menu/buttons/Quit" to="GUI/pause_menu/buttons/Quit" method="MouseExited"]

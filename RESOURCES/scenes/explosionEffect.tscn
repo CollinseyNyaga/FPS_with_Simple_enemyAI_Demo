@@ -1,0 +1,234 @@
+[gd_scene load_steps=12 format=3 uid="uid://c4l1lcv8maf8s"]
+
+[ext_resource type="Script" path="res://SCRIPTS/effects/ExplosionEffect.cs" id="1_7m46x"]
+[ext_resource type="Texture2D" uid="uid://ig5ax473xle8" path="res://IMPORTS/textures/fireball.png" id="1_w7hm5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_laj83"]
+transparency = 1
+albedo_texture = ExtResource("1_w7hm5")
+emission_enabled = true
+emission = Color(0.615686, 0.458824, 0.0745098, 1)
+emission_texture = ExtResource("1_w7hm5")
+billboard_mode = 2
+billboard_keep_scale = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ltowk"]
+orientation = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wnxnn"]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(1, 0.0470588, 0.164706, 1)
+albedo_texture = ExtResource("1_w7hm5")
+emission_enabled = true
+emission = Color(1, 0.301961, 0, 1)
+emission_energy_multiplier = 0.45
+emission_texture = ExtResource("1_w7hm5")
+billboard_mode = 2
+billboard_keep_scale = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_nn4fo"]
+orientation = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xbg6c"]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(0.0235294, 0, 0, 0.905882)
+albedo_texture = ExtResource("1_w7hm5")
+emission_enabled = true
+emission = Color(0.164706, 0.0235294, 0, 1)
+emission_energy_multiplier = 0.01
+emission_texture = ExtResource("1_w7hm5")
+billboard_mode = 2
+billboard_keep_scale = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ndxvc"]
+orientation = 2
+
+[sub_resource type="Animation" id="Animation_wclo8"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("stage1:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("stage2:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("stage3:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("stage3:material_override:albedo_color")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.0235294, 0, 0, 0.905882)]
+}
+
+[sub_resource type="Animation" id="Animation_ye3mf"]
+resource_name = "explode"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("stage1:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("stage2:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.1),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("stage3:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.2),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("stage3:material_override:albedo_color")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.6, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.0235294, 0, 0, 0.905882), Color(0.0235294, 0, 0, 0.25098)]
+}
+tracks/4/type = "method"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath(".")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0.9),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"FinishedEffect"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_apfe8"]
+_data = {
+"RESET": SubResource("Animation_wclo8"),
+"explode": SubResource("Animation_ye3mf")
+}
+
+[node name="explosionEffect" type="Node3D"]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0)
+script = ExtResource("1_7m46x")
+
+[node name="stage1" type="CPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0335)
+material_override = SubResource("StandardMaterial3D_laj83")
+emitting = false
+amount = 15
+one_shot = true
+speed_scale = 4.0
+explosiveness = 0.52
+randomness = 1.0
+mesh = SubResource("PlaneMesh_ltowk")
+direction = Vector3(0, 1, 0)
+spread = 120.0
+flatness = 1.0
+gravity = Vector3(0, 5, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 10.0
+scale_amount_min = 4.0
+scale_amount_max = 4.0
+
+[node name="stage2" type="CPUParticles3D" parent="."]
+material_override = SubResource("StandardMaterial3D_wnxnn")
+emitting = false
+amount = 30
+lifetime = 2.0
+one_shot = true
+speed_scale = 4.0
+explosiveness = 1.0
+randomness = 0.61
+mesh = SubResource("PlaneMesh_nn4fo")
+direction = Vector3(1, 1, 1)
+spread = 90.0
+flatness = 0.5
+gravity = Vector3(0, 15, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 10.0
+scale_amount_min = 10.0
+scale_amount_max = 10.0
+
+[node name="stage3" type="CPUParticles3D" parent="."]
+material_override = SubResource("StandardMaterial3D_xbg6c")
+emitting = false
+amount = 30
+lifetime = 3.0
+one_shot = true
+speed_scale = 3.5
+explosiveness = 0.8
+randomness = 0.71
+mesh = SubResource("PlaneMesh_ndxvc")
+direction = Vector3(1, 1, 1)
+spread = 90.0
+flatness = 0.5
+gravity = Vector3(0, 25, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 10.0
+scale_amount_min = 10.0
+scale_amount_max = 10.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_apfe8")
+}
