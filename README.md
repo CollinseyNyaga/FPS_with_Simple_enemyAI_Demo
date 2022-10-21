@@ -18,4 +18,4 @@ Prerequisites :
 
 # SCREENSHOTS
 
-![]
+![gameplay_gif]("Screenshots/gameplay.gif")
